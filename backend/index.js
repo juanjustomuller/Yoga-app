@@ -102,7 +102,7 @@ async function run() {
       res.send(result);
     });
 
-    app.get("users/:id", async (req, res) => {
+    app.get("/users/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) }; //Convierte el id de la URL en un objeto de tipo ObjectId, que es el tipo de dato que utiliza MongoDB para sus identificadores
       const result = await userCollections.findOne(query).toArray();
@@ -110,7 +110,7 @@ async function run() {
     });
 
     app.get("/user/:email", verifyJWT, async (req, res) => {
-      const email = req.params.id;
+      const email = req.params.email;
       const query = { email: email };
       const result = await userCollections.findOne(query).toArray();
       res.send(result);
@@ -123,7 +123,7 @@ async function run() {
       res.send(result);
     });
 
-    app.put("update-user/:id", verifyJWT, verifyAdmin, async (req, res) => {
+    app.put("/update-user/:id", verifyJWT, verifyAdmin, async (req, res) => {
       const id = req.params.id;
       const updateUser = req.body;
       const filter = { _id: new ObjectId(id) };
@@ -318,7 +318,7 @@ async function run() {
 
     /*PIPELINE: Te permite procesar datos en varias etapas, donde cada etapa realiza una operación específica, 
     y el resultado de una etapa se convierte en la entrada de la siguiente.*/
-    app.get("/popular_instructors", async (req, res) => {
+    app.get("/popular-instructors", async (req, res) => {
       const pipeline = [
         {
           $group: {
@@ -336,14 +336,18 @@ async function run() {
           },
         },
         {
+          $match: {
+            "instructor.role": "instructor",
+          }
+        },
+        {
           $project: {
-            //Selecciona (proyecta) solo algunos campos del resultado anterior
-            _id: 0, //Elimina _id (lo pone en 0, lo que significa que no se mostrará).
+            _id: 0, // Elimina _id (lo pone en 0, lo que significa que no se mostrará).
             instructor: {
-              $arrayElemAt: ["instructor", 0],
-            },
-            totalEnrolled: 1, //Para cada instructor, tendrás solo su información básica (el primer elemento en el array instructor)
-          }, //y el total de estudiantes inscritos.
+              $arrayElemAt: ["$instructor", 0]
+            }, // Mantén el campo instructor después de descomponerlo con $unwind
+            totalEnrolled: 1, // Para cada instructor, tendrás solo su información básica y el total de estudiantes inscritos.
+          },
         },
         {
           $sort: {
