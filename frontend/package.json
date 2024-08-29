@@ -20,6 +20,7 @@
     "alpinejs": "^3.12.2",
     "aos": "^2.3.4",
     "axios": "^1.4.0",
+    "caniuse-lite": "^1.0.30001653",
     "create-file-list": "^1.1.0",
     "firebase": "^9.22.1",
     "framer-motion": "^10.12.16",

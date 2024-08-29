@@ -94,7 +94,7 @@ export const AuthProvider = ({children}) => {
     }, [])
 
     //Prepara un objeto con el estado del usuario, funciones de autenticación y errores.
-    const contextValue = {user, signUp, login, logOut, updateUser, googleLogin, error, setError}
+    const contextValue = {user, signUp, login, logOut, updateUser, googleLogin, error, setError, loader, setLoader}
   return (
     <AuthContext.Provider value={contextValue}>  
         {children}
