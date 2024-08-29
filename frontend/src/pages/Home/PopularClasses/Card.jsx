@@ -2,7 +2,7 @@ import React from 'react'
 import {Link} from 'react-router-dom';
 
 const Card = ({item}) => {
-    console.log("Item de Card: ", item)
+    //console.log("Item de Card: ", item)
     const {_id, name, image, availableSeats, price, totalEnrolled} = item
   return (
     <div className='shadow-lg rounded-lg p-3 flex flex-col justify-between border border-secondary overflow-hidden m-4'>

@@ -15,7 +15,7 @@ const PopularClasses = () => {
 
     fetchClasses();
   }, []);
-  console.log("State classes: ", classes);
+  //console.log("State classes: ", classes);
 
   return (
     <div className="md:w-[80%] mx-auto my-36">

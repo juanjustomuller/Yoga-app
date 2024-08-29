@@ -3,6 +3,7 @@ import HeroContainer from "./Hero/HeroContainer"
 import PopularClasses from "./PopularClasses/PopularClasses"
 import PopularTeacher from "./PopularTeacher/PopularTeacher"
 
+console.log(import.meta.env.VITE_APIKEY);
 
 const Home = () => {
   return (
