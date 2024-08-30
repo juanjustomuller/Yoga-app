@@ -13,15 +13,21 @@ export const AuthProvider = ({children}) => {
     const auth = getAuth(app);
 
     //signup new user
-    const signUp = async (email, password) => {  //Registra un nuevo usuario con email y contraseña usando createUserWithEmailAndPassword
-        try {
-            setLoader(true)
-            return await createUserWithEmailAndPassword(auth, email, password)
-        } catch (error) {
-            setError(error.code);
-            throw error
+const signUp = async (email, password) => {  
+    try {
+        setLoader(true);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        return userCredential;
+    } catch (error) {
+        if (error.code === 'auth/email-already-in-use') {
+            setError('El correo electrónico ya está en uso. Por favor, intenta con otro.');
+        } else {
+            setError('Ocurrió un error durante el registro. Inténtalo de nuevo.');
         }
+        setLoader(false);
+        throw error;
     }
+};
 
     //login user
     const login = async (email, password) => { //Inicia sesión con email y contraseña usando signInWithEmailAndPassword

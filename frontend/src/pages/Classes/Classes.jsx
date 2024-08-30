@@ -4,11 +4,11 @@ import { Transition } from "@headlessui/react";
 import { Link, useNavigate } from "react-router-dom";
 import useUser from "../../hooks/useUser";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { ToastContainer, toast } from 'react-toastify';
 
 const Classes = () => {
   const [classes, setClasses] = useState([]);
   const { currentUser } = useUser();
+  console.log("currentUser:", currentUser);
   const role = currentUser?.role;
   const [enrolledClasses, setEnrolledClasses] = useState([]);
 
@@ -33,49 +33,37 @@ const Classes = () => {
 
   //handle add to cart
   const handleSelect = (id) => {
-  //console.log(id);
-    axiosSecure.get(`/enrolled-classes/${currentUser?.email}`)
-    .then(res => setEnrolledClasses(res.data)).catch(err => console.log(err))
+  if (!currentUser || !currentUser.email) {
+    alert("Please Login First!");
+    return navigate("/login");
+  }
 
-    if (!currentUser) {
-      navigate('/login'); // Redirige al usuario a la página de inicio de sesión
-      return; // Detiene la ejecución si no hay usuario actual
-    }
-
-    if (!currentUser) {
-      return toast.error("Please Login First!")
-    }
-
-    axiosSecure.get(`/cart-item/${id}?email=${currentUser.email}`)
-    .then(res => {
-      if(res.data.clasId === id){
-        return toast.error("Already Selected!")
-      } else if(enrolledClasses.find(item=> item.classes._id === id)){
-        return toast.error("Already Enrolled!")
+  axiosSecure.get(`/cart-item/${id}?email=${currentUser.email}`)
+    .then((res) => {
+      if (res.data.classId === id) {
+        console.log(`Class ${id} is already selected`);
+        return alert("Already Selected");
+      } else if (enrolledClasses.find(item => item.classId._id === id)) {
+        return alert("Already Enrolled");
       } else {
         const data = {
-          clasId: id,
+          classId: id,
           userMail: currentUser.email,
-          data: new Date()
-        }
-        toast.promise(axiosSecure.post('/add-to-cart', data)).then(res => {
-          console.log(res.data)
-        }), {
-          pending: "Selecting ...",
-          success: {
-            render({data}){
-              return "Selected Successfully!"
-            }
-          },
-          error: {
-            render({data}) {
-              return `Error: ${data.message}`
-            }
-          }
-        }
+          date: new Date()
+        };
+        axiosSecure.post('/add-to-cart', data)
+          .then((res) => {
+            //setEnrolledClasses([...enrolledClasses, { classId: id }]);
+            alert("Successfully added to the cart");
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.error("Error adding to cart:", err);
+            alert("Failed to add class to cart");
+          });
       }
     })
-  };
+};
 
   //console.log("todas las clases de yoga", classes);
   return (
@@ -126,7 +114,11 @@ const Classes = () => {
                           : "No Seat Availble"
                         : "You can select classes"
                     }
-                    disabled={role === 'admin' || role === 'instructor' || cls.availableSeats < 1}
+                    disabled={
+                      role === "admin" ||
+                      role === "instructor" ||
+                      cls.availableSeats < 1
+                    }
                     className="px-4 py-2 text-white disabled:bg-red-300 bg-secondary duration-300 rounded hover:bg-red-600"
                   >
                     Add to Cart

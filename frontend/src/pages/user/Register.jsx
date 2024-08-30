@@ -11,6 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 import GoogleLogin from "../../components/Social/GoogleLogin";
 import { useContext } from "react";
 import { AuthContext } from "../../utilities/providers/AuthProvider";
+import axios from "axios";
 
 const Register = () => {
   const navigate = useNavigate();
