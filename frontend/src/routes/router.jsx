@@ -6,6 +6,9 @@ import Classes from "../pages/Classes/Classes";
 import Login from "../pages/user/Login";
 import Register from "../pages/user/Register";
 import SingleClass from "../pages/Classes/SingleClass";
+import DashboardLayout from "../layout/DashboardLayout";
+import Dashboard from "../pages/Dashboard/Dashboard";
+import StudentCP from "../pages/Dashboard/Student/StudentCP";
 
 
 export const router = createBrowserRouter([
@@ -40,4 +43,21 @@ export const router = createBrowserRouter([
         }
       ]
     },
+
+    {
+      path: "/dashboard",
+      element: <DashboardLayout />,
+      children: [
+        {
+          index: true,
+          element: <Dashboard />
+        },
+
+        //students routes
+        {
+          path: "student-cp",
+          element: <StudentCP />
+        }
+      ]
+    }
   ]);
