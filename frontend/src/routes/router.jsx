@@ -5,6 +5,7 @@ import Instructors from "../pages/Instructors/Instructors";
 import Classes from "../pages/Classes/Classes";
 import Login from "../pages/user/Login";
 import Register from "../pages/user/Register";
+import SingleClass from "../pages/Classes/SingleClass";
 
 
 export const router = createBrowserRouter([
@@ -31,6 +32,11 @@ export const router = createBrowserRouter([
         {
           path: "/register",
           element: <Register />
+        },
+        {
+          path: "/class/:id",
+          element: <SingleClass />,
+          loader: ({params}) => fetch(`http://localhost:3000/class/${params.id}`)
         }
       ]
     },
